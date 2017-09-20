@@ -31,9 +31,20 @@ The goals of this project are the following:
 [video2]: ./Project-CHALLENGE.mp4 "Challenge Video"
 
 
-### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+### Development Environment
+Intel® Core™ i5-5200U CPU @ 2.20GHz × 4 - 6Gb RAM
+GeForce 930M/PCIe/SSE2 - 2Gb RAM
+Ubuntu 17.04 - 64bits
+Jupyter NoteBook - Python 3.6
 
----
+### Project Files
+
+1.writeup.md (This WriteUp)
+2.adv_lanes.ipynb (Jupyter Notebook pipeline to Project Video)
+3.challenge.ipynb (Jupyter Notebook pipeline to Challenge Video)
+4.Line.py (Line class file)
+5.Project_ADVLANES.mp4 (Project Video)
+6.Project-CHALLENGE.mp4 (Challenge Video)
 
 ### 1. Camera Calibration and Image Undistortion 
 
