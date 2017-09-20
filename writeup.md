@@ -26,7 +26,9 @@ The goals of this project are the following:
 [image7]: ./examples/histogram.png "Histogram"
 [image8]: ./examples/find_lanes.png "Histogram"
 [image9]: ./examples/find_next_lane.png "Histogram"
-[video1]: ./examples/histogram.png "Histogram"
+[image10]: ./examples/draw_lanes.png "Histogram"
+[video1]: ./project_ADVLANES "Project Video"
+[video2]: ./project-CHALLENGE "Challenge Video"
 
 
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -121,8 +123,11 @@ In the project video, first the find_lane() function is called and then find_nex
 In the challenge video, in the first iteration find_lane() is called and if find_next_lane() does not detect the lane in the next frame , find_lane() is called again. Another difference from both codes are the way X points are passed to the draw_lanes() function. In the case of the challenge video is passed and average of the last measurements. All theses differences between the two codes approach made the chalenge.ipynb consume much more computer resources , and was pretty hard to fit the model and process the entire video in my simple I5 Asus Notebook with just 6GB of memory. 
 In the challenge pipeline, to simplify arguments and returns of functions was implemented the class Line() (Line.py) , imported in the first lines of the code.
 
-Going deeper in the finding lanes problem , the principle is:
-        a.detect the pikes of the histogram of the binary output of the bird_view() function as below ![alt text][image6]![alt text][image7]
+Going deeper in the finding lanes problem , the principle is
+
+a.detect the pikes of the histogram of the binary output of the bird_view() function as below. ![alt text][image6]![alt text][image7]
+
+b.Fit the X and Y points to a second degree polynomial. ![alt text][image8]![alt text][image9]
         
         
         
@@ -131,25 +136,70 @@ Going deeper in the finding lanes problem , the principle is:
 
 
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center
+#### 5. Curvature radius calculation
 
-I did this in lines # through # in my code in `my_other_file.py`
+In the second cell of the jupyter notebook is located the function lanes_curvature() , were the radius is calculated as follow
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+def lanes_curvature (ploty, left_fit, right_fit):
+    y_eval = np.max(ploty)
+    left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
+    right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
+    
+    return int(left_curverad), int(right_curverad)
+    
+In the challenge pipeline the radius as reffered by the instance of the class Line left.radius_of_curvature and right.radius_of_curvature
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+The values as printed inside de draw_lanes() function using the method cv2.putText()
 
 
 
+#### 6. Drawing Lanes.
+
+The draw_lanes() function is responsable to draw the lane in the orginal image.
 
 
+def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, show = False, l_rad=0, r_rad=0):
+
+    # Create an image to draw the lines on
+    warp_zero = np.zeros_like(warped).astype(np.uint8)
+    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+
+    # Recast the x and y points into usable format for cv2.fillPoly()
+    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
+    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+    pts = np.hstack((pts_left, pts_right))
+
+    # Draw the lane onto the warped blank image
+    cv2.fillPoly(color_warp, np.int_([pts]), (0,255, 0))
+
+    # Warp the blank back to original image space using inverse perspective matrix (Minv)
+    newwarp = cv2.warpPerspective(color_warp, Minv, (undist.shape[1], undist.shape[0])) 
+    # Combine the result with the original image
+    result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
+    #result = cv2.cvtColor(result, cv2.COLOR_BGR2RGB)
+    cv2.putText(result,"Left Rad: " + str(l_rad) + "m", (100,100), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
+    cv2.putText(result,"Right Rad: " + str(r_rad) + "m", (100,200), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
+    cv2.putText(result,"Center Error: " + str(pix_meters) + "m", (100,300), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
+    
+    if show == True:
+        plt.imshow(result)
+        
+    return result
+    
+    
+    
+![alt text][image10]
+    
+ 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+#### 1. Project Video
 
-Here's a [link to my video result](./project_video.mp4)
+![alt text][video1]
 
----
+#### 2. Challenge Video
+
+![alt text][video2]
 
 ### Discussion
 
