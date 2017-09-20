@@ -140,8 +140,8 @@ a.detect the pikes of the histogram of the binary output of the bird_view() func
 
 ![alt text][image6]
 
-Histogram
-![alt text][image7]
+
+![HISTOGRAM][image7]
 
 b.Fit the X and Y points to a second degree polynomial. 
 
