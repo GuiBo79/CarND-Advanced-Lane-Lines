@@ -134,11 +134,13 @@ In the project video, first the find_lane() function is called and then find_nex
 In the challenge video, in the first iteration find_lane() is called and if find_next_lane() does not detect the lane in the next frame , find_lane() is called again. Another difference from both codes are the way X points are passed to the draw_lanes() function. In the case of the challenge video is passed and average of the last measurements. All theses differences between the two codes approach made the chalenge.ipynb consume much more computer resources , and was pretty hard to fit the model and process the entire video in my simple I5 Asus Notebook with just 6GB of memory. 
 In the challenge pipeline, to simplify arguments and returns of functions was implemented the class Line() (Line.py) , imported in the first lines of the code.
 
-Going deeper in the finding lanes problem , the principle is
+Going deeper in the finding lanes problem , the principle is:
 
 a.detect the pikes of the histogram of the binary output of the bird_view() function as below. 
 
 ![alt text][image6]
+
+Histogram
 ![alt text][image7]
 
 b.Fit the X and Y points to a second degree polynomial. 
