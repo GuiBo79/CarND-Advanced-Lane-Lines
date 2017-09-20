@@ -21,7 +21,7 @@ The goals of this project are the following:
 [image2]: ./examples/calibration5_undist.jpg "Chess Undistorced"
 [image3]: ./examples/test1_undist.jpg "Test Image Undistorced"
 [image4]: ./examples/original_image.png "OriginalXBinary Image"
-[image5]: ./examples/bird_view.png "Bird View Image"
+[image5]: ./examples/bird_view_straight.png "Bird View Image"
 [image6]: ./examples/bird_view_binary.png "Bird View Binary"
 [image7]: ./examples/histogram.png "Histogram"
 [image8]: ./examples/find_lanes.png "Histogram"
