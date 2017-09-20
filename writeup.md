@@ -59,13 +59,13 @@ A test image Undistorced
 
 I used a combination of color and gradient thresholds to generate a binary image in the function color_gradient() , in the cell number 6 , in the jupyter notebook adv_lanes.  Tho process the images I implemented all the techniques that could be used , and than I selected the ones who gaves me the best result. Above, all the image processing functions.
 
-abs_sobel_thresh() - Calculate the Sobel transform
-mag_thresh() - Magnitude Sobel Transform
-dir_threshold - Direction Sobel Transform
-RGB_Split() - Split RGB Channels
-HLS_Split() - Split HLS Channels 
-thresh_color_channel() - Apply Threshold to Color Channels 
-gaussian_blur() - Apply the Gaussian Filter (Just for the Challenge Pipeline challenge.ipynb)
+>abs_sobel_thresh() - Calculate the Sobel transform
+>mag_thresh() - Magnitude Sobel Transform
+>dir_threshold - Direction Sobel Transform
+>RGB_Split() - Split RGB Channels
+>HLS_Split() - Split HLS Channels 
+>thresh_color_channel() - Apply Threshold to Color Channels 
+>gaussian_blur() - Apply the Gaussian Filter (Just for the Challenge Pipeline challenge.ipynb)
 
 The color_image() funtion:
 
@@ -126,13 +126,13 @@ Going deeper in the finding lanes problem , the principle is
 
 a.detect the pikes of the histogram of the binary output of the bird_view() function as below. 
 
-[alt text][image6]
-[alt text][image7]
+![alt text][image6]
+![alt text][image7]
 
 b.Fit the X and Y points to a second degree polynomial. 
 
-[alt text][image8]
-[alt text][image9]
+![alt text][image8]
+![alt text][image9]
         
         
         
