@@ -19,7 +19,7 @@ The goals of this project are the following:
 
 [image1]: ./examples/calibration5.jpg "Chess Original"
 [image2]: ./examples/calibration5_undist.jpg "Chess Undistorced"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
+[image3]: ./examples/teste1_undist.jpg "Test Image Undistorced"
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image5]: ./examples/color_fit_lines.jpg "Fit Visual"
 [image6]: ./examples/example_output.jpg "Output"
@@ -32,7 +32,7 @@ The goals of this project are the following:
 
 ### Writeup / README
 
-### 1. Camera Calibration
+### 1. Camera Calibration and Image Undistortion 
 
 The code for this step is contained in the first code cell of the IPython notebook located in "adv_lanes.ipynb" , in the function calibrate_camera().
 
@@ -44,10 +44,13 @@ The function calibrate_camera() returns the 'mtx' and 'dist' coeficients who are
 
 I applied this distortion correction to the test image using the undist() , ho takes as arguments an image, mxt and dist coeficients.
 
-Chess Original X Chess Undistorced 
-
+Chessboard Original 
 ![alt text][image1]
+Chessboard Undistorced 
 ![alt text][image2]
+A test image Undistorced
+![alt text][image3]
+
 
 
 ### Pipeline (single images)
