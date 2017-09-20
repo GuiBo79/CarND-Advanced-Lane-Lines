@@ -17,8 +17,8 @@ The goals of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/calibration5.png "Chess Original"
-[image2]: ./examples/calibration5_undist "Chess Undistorced"
+[image1]: ./examples/calibration5.jpg "Chess Original"
+[image2]: ./examples/calibration5_undist.jpg "Chess Undistorced"
 [image3]: ./examples/binary_combo_example.jpg "Binary Example"
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image5]: ./examples/color_fit_lines.jpg "Fit Visual"
