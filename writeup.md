@@ -60,15 +60,22 @@ A test image Undistorced
 I used a combination of color and gradient thresholds to generate a binary image in the function color_gradient() , in the cell number 6 , in the jupyter notebook adv_lanes.  Tho process the images I implemented all the techniques that could be used , and than I selected the ones who gaves me the best result. Above, all the image processing functions.
 
 >abs_sobel_thresh() - Calculate the Sobel transform
+
 >mag_thresh() - Magnitude Sobel Transform
+
 >dir_threshold - Direction Sobel Transform
+
 >RGB_Split() - Split RGB Channels
+
 >HLS_Split() - Split HLS Channels 
+
 >thresh_color_channel() - Apply Threshold to Color Channels 
+
 >gaussian_blur() - Apply the Gaussian Filter (Just for the Challenge Pipeline challenge.ipynb)
 
 The color_image() funtion:
 
+'''python
 def color_gradient (img):  
     img = undist(img, mtx, dist)
     _,_,s_channel = HLS_Split(img)
@@ -81,6 +88,7 @@ def color_gradient (img):
     combined_binary = (sobel_binary | s_binary)
     
     return img,combined_binary
+'''
     
     
  Above is possible to see that the binary image is composed by a Sobel transform related to "x" and the "s" color channel  thresholded . The composition is made using a bit wise "OR" operation.
@@ -146,7 +154,7 @@ b.Fit the X and Y points to a second degree polynomial.
 In the second cell of the jupyter notebook is located the function lanes_curvature() , were the radius is calculated as follow
 
 
-'''
+'''python
 def lanes_curvature (ploty, left_fit, right_fit):
     y_eval = np.max(ploty)
     left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0]
@@ -165,6 +173,7 @@ The values as printed inside de draw_lanes() function using the method cv2.putTe
 
 The draw_lanes() function is responsable to draw the lane in the orginal image.
 
+'''python
 def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, show = False, l_rad=0, r_rad=0):
     # Create an image to draw the lines on
     warp_zero = np.zeros_like(warped).astype(np.uint8)
@@ -192,6 +201,8 @@ def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, sho
         
     return result
     
+ '''
+    
     
     
 ![alt text][image10]
@@ -201,11 +212,11 @@ def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, sho
 
 #### 1. Project Video
 
-![alt text][video1]
+[Link to project video](./Project_ADVLANES.mp4)
 
 #### 2. Challenge Video
 
-![alt text][video2]
+[Link to challenge video](./Project-CHALLENGE.mp4)
 
 ### Discussion
 
