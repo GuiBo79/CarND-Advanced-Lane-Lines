@@ -22,8 +22,11 @@ The goals of this project are the following:
 [image3]: ./examples/test1_undist.jpg "Test Image Undistorced"
 [image4]: ./examples/original_image.png "OriginalXBinary Image"
 [image5]: ./examples/bird_view.png "Bird View Image"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[image6]: ./examples/bird_view_binary.png "Bird View Binary"
+[image7]: ./examples/histogram.png "Histogram"
+[image8]: ./examples/find_lanes.png "Histogram"
+[image9]: ./examples/find_next_lane.png "Histogram"
+[video1]: ./examples/histogram.png "Histogram"
 
 
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -112,9 +115,26 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Finding Lanes and Polynomial Fitting
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+Here the approach was different for the project video and the challenge video. For both solutions were used two functions , find_lanes() and find_next_lane(). For the Project Video, the entire pipeline is pretty much simplier than for the challenge video. To organise better the code development, first , with a simple approach I solved the project video and the I implement some more sophisticate techniques to the challenge video(challenge.ipynb) 
 
-![alt text][image5]
+In the project video, first the find_lane() function is called and then find_next_lane() function assumes the job, without lane detection.
+In the challenge video, in the first iteration find_lane() is called and if find_next_lane() does not detect the lane in the next frame , find_lane() is called again. Another difference from both codes are the way X points are passed to the draw_lanes() function. In the case of the challenge video is passed and average of the last measurements. All theses differences between the two codes approach made the chalenge.ipynb consume much more computer resources , and was pretty hard to fit the model and process the entire video in my simple I5 Asus Notebook with just 6GB of memory. 
+In the challenge pipeline, to simplify arguments and returns of functions was implemented the class Line() (Line.py) , imported in the first lines of the code.
+
+Going deeper in the finding lanes problem , the principle is:
+        a.detect the pikes of the histogram of the binary output of the bird_view() function as below
+        
+        Bird View Binary
+        ![alt text][image6]
+        
+        Histogram
+        ![alt text][image7]
+        
+        
+        
+
+
+
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
