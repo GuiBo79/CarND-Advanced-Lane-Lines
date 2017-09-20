@@ -32,10 +32,10 @@ The goals of this project are the following:
 
 
 ### Development Environment
-Intel® Core™ i5-5200U CPU @ 2.20GHz × 4 - 6Gb RAM
-GeForce 930M/PCIe/SSE2 - 2Gb RAM
-Ubuntu 17.04 - 64bits
-Jupyter NoteBook - Python 3.6
+    Intel® Core™ i5-5200U CPU @ 2.20GHz × 4 - 6Gb RAM
+    GeForce 930M/PCIe/SSE2 - 2Gb RAM
+    Ubuntu 17.04 - 64bits
+    Jupyter NoteBook - Python 3.6
 
 ### Project Files
 
