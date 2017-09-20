@@ -39,12 +39,12 @@ The goals of this project are the following:
 
 ### Project Files
 
-1.writeup.md (This WriteUp)
-2.adv_lanes.ipynb (Jupyter Notebook pipeline to Project Video)
-3.challenge.ipynb (Jupyter Notebook pipeline to Challenge Video)
-4.Line.py (Line class file)
-5.Project_ADVLANES.mp4 (Project Video)
-6.Project-CHALLENGE.mp4 (Challenge Video)
+1. writeup.md (This WriteUp)
+2. adv_lanes.ipynb (Jupyter Notebook pipeline to Project Video)
+3. challenge.ipynb (Jupyter Notebook pipeline to Challenge Video)
+4. Line.py (Line class file)
+5. Project_ADVLANES.mp4 (Project Video)
+6. Project-CHALLENGE.mp4 (Challenge Video)
 
 ### 1. Camera Calibration and Image Undistortion 
 
