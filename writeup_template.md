@@ -122,13 +122,8 @@ In the challenge video, in the first iteration find_lane() is called and if find
 In the challenge pipeline, to simplify arguments and returns of functions was implemented the class Line() (Line.py) , imported in the first lines of the code.
 
 Going deeper in the finding lanes problem , the principle is:
-        a.detect the pikes of the histogram of the binary output of the bird_view() function as below
+        a.detect the pikes of the histogram of the binary output of the bird_view() function as below ![alt text][image6]![alt text][image7]
         
-        Bird View Binary
-        ![alt text][image6]
-        
-        Histogram
-        ![alt text][image7]
         
         
         
