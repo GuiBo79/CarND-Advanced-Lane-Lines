@@ -26,7 +26,7 @@ The goals of this project are the following:
 [image7]: ./examples/histogram.png "Histogram"
 [image8]: ./examples/find_lanes.png "Histogram"
 [image9]: ./examples/find_next_lane.png "Histogram"
-[image10]: ./examples/draw_lanes.png "Histogram"
+[image10]: ./examples/draw_color_lanes.png "Histogram"
 [video1]: ./Project_ADVLANES.mp4 "Project Video"
 [video2]: ./Project-CHALLENGE.mp4 "Challenge Video"
 
@@ -125,10 +125,14 @@ In the challenge pipeline, to simplify arguments and returns of functions was im
 Going deeper in the finding lanes problem , the principle is
 
 a.detect the pikes of the histogram of the binary output of the bird_view() function as below. 
-![alt text][image6]![alt text][image7]
+
+[alt text][image6]
+[alt text][image7]
 
 b.Fit the X and Y points to a second degree polynomial. 
-![alt text][image8]![alt text][image9]
+
+[alt text][image8]
+[alt text][image9]
         
         
         
@@ -142,14 +146,14 @@ b.Fit the X and Y points to a second degree polynomial.
 In the second cell of the jupyter notebook is located the function lanes_curvature() , were the radius is calculated as follow
 
 
-
+'''
 def lanes_curvature (ploty, left_fit, right_fit):
     y_eval = np.max(ploty)
-    left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
-    right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
-    
+    left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0]
+    right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0]  
     return int(left_curverad), int(right_curverad)
-    
+'''
+ 
     
 In the challenge pipeline the radius as reffered by the instance of the class Line left.radius_of_curvature and right.radius_of_curvature
 
