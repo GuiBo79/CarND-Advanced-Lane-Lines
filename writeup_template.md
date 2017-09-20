@@ -20,8 +20,8 @@ The goals of this project are the following:
 [image1]: ./examples/calibration5.jpg "Chess Original"
 [image2]: ./examples/calibration5_undist.jpg "Chess Undistorced"
 [image3]: ./examples/test1_undist.jpg "Test Image Undistorced"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
+[image4]: ./examples/original_image.png "Original Image"
+[image5]: ./examples/binary_image.png "Binary Image"
 [image6]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
@@ -29,8 +29,6 @@ The goals of this project are the following:
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
-
-### Writeup / README
 
 ### 1. Camera Calibration and Image Undistortion 
 
@@ -42,7 +40,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 The function calibrate_camera() returns the 'mtx' and 'dist' coeficients who are used in a second function called undist() (also in the first cell of the jupyter notebook). 
 
-I applied this distortion correction to the test image using the undist() , ho takes as arguments an image, mxt and dist coeficients.
+I applied this distortion correction to the test image using the undist() , who takes as arguments an image, mxt and dist coeficients, and will be used in the entire pipeline.
 
 Chessboard Original 
 ![alt text][image1]
@@ -52,20 +50,43 @@ A test image Undistorced
 ![alt text][image3]
 
 
+### 2. Color and Gradient pipeline for binary images generation 
 
-### Pipeline (single images)
+I used a combination of color and gradient thresholds to generate a binary image in the function color_gradient() , in the cell number 6 , in the jupyter notebook adv_lanes.  Tho process the images I implemented all the techniques that could be used , and than I selected the ones who gaves me the best result. Above, all the image processing functions.
 
-#### 1. Provide an example of a distortion-corrected image
+abs_sobel_thresh() - Calculate the Sobel transform
+mag_thresh() - Magnitude Sobel Transform
+dir_threshold - Direction Sobel Transform
+RGB_Split() - Split RGB Channels
+HLS_Split() - Split HLS Channels 
+thresh_color_channel() - Apply Threshold to Color Channels 
+gaussian_blur() - Apply the Gaussian Filter (Just for the Challenge Pipeline challenge.ipynb)
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
+The color_image() funtion:
 
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+def color_gradient (img):  
+    
+    img = undist(img, mtx, dist)
+    _,_,s_channel = HLS_Split(img)
+    s_binary = thresh_color_channel(s_channel, thresh_min=100, thresh_max=255)
+      
+    
+    sobel_binary = abs_sobel_thresh(img, orient='x', thresh_min=20, thresh_max=150)
+    mag_binary = mag_thresh(img, sobel_kernel=3, mag_thresh=(0, 255))  
+    
+    combined_binary = (sobel_binary | s_binary)
+    
+    return img,combined_binary
+    
+    
+ Above is possible to see that the binary image is composed by a Sobel transform related to "x" and the "s" color channel  thresholded . The composition is made using a bit wise "OR" operation.
+ 
+Original Image 
+![alt text][image4]
+Binary Image
+![alt text][image5]
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
-
-![alt text][image3]
-
+ 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
