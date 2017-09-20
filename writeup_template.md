@@ -136,7 +136,7 @@ Going deeper in the finding lanes problem , the principle is:
 
 
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center
 
 I did this in lines # through # in my code in `my_other_file.py`
 
