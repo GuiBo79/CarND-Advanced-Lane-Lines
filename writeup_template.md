@@ -46,7 +46,8 @@ I applied this distortion correction to the test image using the undist() , ho t
 
 Chess Original X Chess Undistorced 
 
-![alt text][image1]![alt text][image2]
+![alt text][image1]
+![alt text][image2]
 
 
 ### Pipeline (single images)
