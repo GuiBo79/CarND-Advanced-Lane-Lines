@@ -59,36 +59,28 @@ A test image Undistorced
 
 I used a combination of color and gradient thresholds to generate a binary image in the function color_gradient() , in the cell number 6 , in the jupyter notebook adv_lanes.  Tho process the images I implemented all the techniques that could be used , and than I selected the ones who gaves me the best result. Above, all the image processing functions.
 
->abs_sobel_thresh() - Calculate the Sobel transform
+    abs_sobel_thresh() - Calculate the Sobel transform
+    mag_thresh() - Magnitude Sobel Transform
+    dir_threshold - Direction Sobel Transform
+    RGB_Split() - Split RGB Channels
+    HLS_Split() - Split HLS Channels 
+    thresh_color_channel() - Apply Threshold to Color Channels 
+    gaussian_blur() - Apply the Gaussian Filter (Just for the Challenge Pipeline challenge.ipynb)
 
->mag_thresh() - Magnitude Sobel Transform
-
->dir_threshold - Direction Sobel Transform
-
->RGB_Split() - Split RGB Channels
-
->HLS_Split() - Split HLS Channels 
-
->thresh_color_channel() - Apply Threshold to Color Channels 
-
->gaussian_blur() - Apply the Gaussian Filter (Just for the Challenge Pipeline challenge.ipynb)
 
 The color_image() funtion:
 
-´´´python
-def color_gradient (img):  
+    def color_gradient (img):  
     img = undist(img, mtx, dist)
     _,_,s_channel = HLS_Split(img)
     s_binary = thresh_color_channel(s_channel, thresh_min=100, thresh_max=255)
-      
-    
     sobel_binary = abs_sobel_thresh(img, orient='x', thresh_min=20, thresh_max=150)
     mag_binary = mag_thresh(img, sobel_kernel=3, mag_thresh=(0, 255))  
     
     combined_binary = (sobel_binary | s_binary)
     
     return img,combined_binary
-´´´
+
     
     
  Above is possible to see that the binary image is composed by a Sobel transform related to "x" and the "s" color channel  thresholded . The composition is made using a bit wise "OR" operation.
@@ -105,8 +97,9 @@ def color_gradient (img):
 
 The code for my perspective transform includes a function called bird_view(), which appears in first cell of the adv_lanes.ipynb file.  The bird_view() function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
-src_pts = np.float32([[245,720],[590,450],[685,450],[1060,720]])
-dst_pts = np.float32([[245,720],[170,0],[1060,0],[1040,720]])
+    src_pts = np.float32([[245,720],[590,450],[685,450],[1060,720]])
+
+    dst_pts = np.float32([[245,720],[170,0],[1060,0],[1040,720]])
 
 
 This resulted in the following source and destination points:
@@ -141,11 +134,6 @@ b.Fit the X and Y points to a second degree polynomial.
 
 ![alt text][image8]
 ![alt text][image9]
-        
-        
-        
-        
-
 
 
 
@@ -154,13 +142,13 @@ b.Fit the X and Y points to a second degree polynomial.
 In the second cell of the jupyter notebook is located the function lanes_curvature() , were the radius is calculated as follow
 
 
-'''python
-def lanes_curvature (ploty, left_fit, right_fit):
+
+    def lanes_curvature (ploty, left_fit, right_fit):
     y_eval = np.max(ploty)
     left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0]
     right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0]  
     return int(left_curverad), int(right_curverad)
-'''
+
  
     
 In the challenge pipeline the radius as reffered by the instance of the class Line left.radius_of_curvature and right.radius_of_curvature
@@ -173,8 +161,8 @@ The values as printed inside de draw_lanes() function using the method cv2.putTe
 
 The draw_lanes() function is responsable to draw the lane in the orginal image.
 
-'''python
-def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, show = False, l_rad=0, r_rad=0):
+
+    def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, show = False, l_rad=0, r_rad=0):
     # Create an image to draw the lines on
     warp_zero = np.zeros_like(warped).astype(np.uint8)
     color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
@@ -201,7 +189,7 @@ def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, sho
         
     return result
     
- '''
+
     
     
     
