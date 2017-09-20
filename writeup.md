@@ -75,7 +75,7 @@ I used a combination of color and gradient thresholds to generate a binary image
 
 The color_image() funtion:
 
-'''python
+´´´python
 def color_gradient (img):  
     img = undist(img, mtx, dist)
     _,_,s_channel = HLS_Split(img)
@@ -88,7 +88,7 @@ def color_gradient (img):
     combined_binary = (sobel_binary | s_binary)
     
     return img,combined_binary
-'''
+´´´
     
     
  Above is possible to see that the binary image is composed by a Sobel transform related to "x" and the "s" color channel  thresholded . The composition is made using a bit wise "OR" operation.
