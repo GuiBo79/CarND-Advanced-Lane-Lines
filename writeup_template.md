@@ -19,7 +19,7 @@ The goals of this project are the following:
 
 [image1]: ./examples/calibration5.jpg "Chess Original"
 [image2]: ./examples/calibration5_undist.jpg "Chess Undistorced"
-[image3]: ./examples/teste1_undist.jpg "Test Image Undistorced"
+[image3]: ./examples/test1_undist.jpg "Test Image Undistorced"
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image5]: ./examples/color_fit_lines.jpg "Fit Visual"
 [image6]: ./examples/example_output.jpg "Output"
