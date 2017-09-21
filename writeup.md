@@ -1,4 +1,14 @@
-## Writeup - Advanced Lane Lines Projects 
+## Writeup - Advanced Lane Lines Projects - REVIEWED
+
+### REVIEWED ITEMS
+
+* Insertion o RED channel in color_gradient() function
+* Insertion of the class Line for entire project to manage data
+* Inclusion of lane.detected instance to control Blind search and Window search
+* Correction of bird_view() function to get more pixels and improve pikes detection in the histogram
+* "X" values passed as average of last iterations
+* Correction of relative center position calculation
+
 
 ### This writeup contain a description about how was found the solution for advanced lane lines detection as well an explanation about the code.
 ---
@@ -79,7 +89,7 @@ I used a combination of color and gradient thresholds to generate a binary image
     gaussian_blur() - Apply the Gaussian Filter (Just for the Challenge Pipeline challenge.ipynb)
 
 
-The color_image() funtion:
+The color_gradient() funtion:
 
     def color_gradient (img):  
     img = undist(img, mtx, dist)
@@ -91,10 +101,28 @@ The color_image() funtion:
     combined_binary = (sobel_binary | s_binary)
     
     return img,combined_binary
+    
+ REVIEWED color_gradient() Funtion with insertion of the RED channel:
+ 
+       def color_gradient (img):  
+    
+        img = undist(img, mtx, dist)
+         _,_,s_channel = HLS_Split(img)
+         r_channel,_,_ = RGB_Split(img)
+         s_binary = thresh_color_channel(s_channel, thresh_min=100, thresh_max=255)
+         r_binary = thresh_color_channel(s_channel, thresh_min=150, thresh_max=255)
+         sobel_binary = abs_sobel_thresh(img, orient='x', thresh_min=20, thresh_max=150)
+         mag_binary = mag_thresh(img, sobel_kernel=3, mag_thresh=(0, 255))  
+    
+         combined_binary = (sobel_binary | s_binary) | r_binary
+    
+         return img,combined_binary
+    
+    
 
     
     
- Above is possible to see that the binary image is composed by a Sobel transform related to "x" and the "s" color channel  thresholded . The composition is made using a bit wise "OR" operation.
+ Above is possible to see that the binary image is composed by a Sobel transform related to "x" , the "s" color channel  thresholded and the "r" color channel  thresholded . The composition is made using a bit wise "OR" operation.
  
  Below, an examples of the output of the color_gradient() funtion.
  
@@ -111,16 +139,21 @@ The code for my perspective transform includes a function called bird_view(), wh
     src_pts = np.float32([[245,720],[590,450],[685,450],[1060,720]])
 
     dst_pts = np.float32([[245,720],[170,0],[1060,0],[1040,720]])
+    
+REVIWED SRC and DIST points:
+
+    src_pts = np.float32([[300,720],[590,450],[685,450],[1000,720]])
+    dst_pts = np.float32([[300,720],[300,0],[1000,0],[1000,720]])
 
 
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 245, 720      | 245, 720        | 
-| 590, 450      | 170, 0      |
-| 685, 450     | 1060, 0      |
-| 1060, 720      | 1040, 720        |
+| 300, 720      | 300, 720        | 
+| 590, 450      | 300, 0      |
+| 685, 450     | 1000, 0      |
+| 1000, 720      | 1000, 720        |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
