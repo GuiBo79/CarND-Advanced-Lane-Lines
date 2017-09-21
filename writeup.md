@@ -1,7 +1,6 @@
 ## Writeup - Advanced Lane Lines Projects 
 
-### This writeup contain a description about how was foud the solution for , as well, how the pipeline was coded, advanced lane lines. 
-
+### This writeup contain a description about how was found the solution for advanced lane lines detection as well an explanation about the code.
 ---
 
 The goals of this project are the following:
@@ -45,6 +44,7 @@ The goals of this project are the following:
 4. Line.py (Line class file)
 5. Project_ADVLANES.mp4 (Project Video)
 6. Project-CHALLENGE.mp4 (Challenge Video)
+7. calibration.p (Calibration parameters)
 
 ### 1. Camera Calibration and Image Undistortion 
 
@@ -54,9 +54,9 @@ I start by preparing "object points", which will be the (x, y, z) coordinates of
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function. 
 
-The function calibrate_camera() returns the 'mtx' and 'dist' coeficients who are used in a second function called undist() (also in the first cell of the jupyter notebook). 
+The function calibrate_camera() returns the 'mtx' and 'dist' coefficients who are used in a second function called undist() (also in the first cell of the jupyter notebook). 
 
-I applied this distortion correction to the test image using the undist() , who takes as arguments an image, mxt and dist coeficients, and will be used in the entire pipeline.
+I applied this distortion correction to the test image using the undist() , who takes as arguments an image, mxt and dist coefficients, and will be used in the entire pipeline.
 
 Chessboard Original 
 ![alt text][image1]
@@ -68,7 +68,7 @@ A test image Undistorced
 
 ### 2. Color and Gradient pipeline for binary images generation 
 
-I used a combination of color and gradient thresholds to generate a binary image in the function color_gradient() , in the cell number 6 , in the jupyter notebook adv_lanes.  Tho process the images I implemented all the techniques that could be used , and than I selected the ones who gaves me the best result. Above, all the image processing functions.
+I used a combination of color and gradient thresholds to generate a binary image in the function color_gradient() , in the cell number 6 , in the jupyter notebook adv_lanes.  Tho process the images I implemented all the techniques that could be used , and than I selected the ones who gave me the best result. Above, all the image processing functions.
 
     abs_sobel_thresh() - Calculate the Sobel transform
     mag_thresh() - Magnitude Sobel Transform
@@ -104,7 +104,7 @@ The color_image() funtion:
 
 
  
-### 3. "Bird View" function and the Perpective Trasform
+### 3. "Bird View" function and the Perspective Transform
 
 The code for my perspective transform includes a function called bird_view(), which appears in first cell of the adv_lanes.ipynb file.  The bird_view() function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
@@ -126,9 +126,9 @@ I verified that my perspective transform was working as expected by drawing the 
 
 ![alt text][image5]
 
-#### 4. Finding Lanes and Polynomial Fitting
+### 4. Finding Lanes and Polynomial Fitting
 
-Here the approach was different for the project video and the challenge video. For both solutions were used two functions , find_lanes() and find_next_lane(). For the Project Video, the entire pipeline is pretty much simplier than for the challenge video. To organise better the code development, first , with a simple approach I solved the project video and the I implement some more sophisticate techniques to the challenge video(challenge.ipynb) 
+Here the approach was different for the project video and the challenge video. For both solutions were used two functions , find_lanes() and find_next_lane(). For the Project Video, the entire pipeline is pretty much simpler than for the challenge video. To organise better the code development, first , with a simple approach I solved the project video and then I implement some more sophisticate techniques to the challenge video(challenge.ipynb) 
 
 In the project video, first the find_lane() function is called and then find_next_lane() function assumes the job, without lane detection.
 In the challenge video, in the first iteration find_lane() is called and if find_next_lane() does not detect the lane in the next frame , find_lane() is called again. Another difference from both codes are the way X points are passed to the draw_lanes() function. In the case of the challenge video is passed and average of the last measurements. All theses differences between the two codes approach made the chalenge.ipynb consume much more computer resources , and was pretty hard to fit the model and process the entire video in my simple I5 Asus Notebook with just 6GB of memory. 
@@ -150,7 +150,7 @@ b.Fit the X and Y points to a second degree polynomial.
 
 
 
-#### 5. Curvature radius calculation
+### 5. Curvature radius calculation and center position
 
 In the second cell of the jupyter notebook is located the function lanes_curvature() , were the radius is calculated as follow
 
@@ -164,15 +164,28 @@ In the second cell of the jupyter notebook is located the function lanes_curvatu
 
  
     
-In the challenge pipeline the radius as reffered by the instance of the class Line left.radius_of_curvature and right.radius_of_curvature
+In the challenge pipeline the radius as referred by the instance of the class Line left.radius_of_curvature and right.radius_of_curvature
 
-The values as printed inside de draw_lanes() function using the method cv2.putText()
+The values as printed inside the draw_lanes() function using the method cv2.putText()
+
+The code to calculate the position of the center of the lane was implemented inside find_lane() function as follow (challenge.ipynb)
+
+    # Position of the center of the lane
+    lane.midpos = (leftx_base + rightx_base)/2
+    
+To calculate the relative position of the car in respect to the middle of the lane , a piece of code was inserted inside the find_next_lane() function (challenge.ipynb) with 3 decimal aprox.
+
+    #Calculate de relative position of the car in respect to the center of the lane
+    lane.carpos = (left_fitx[500]+right_fitx[500])/2
+    lane.pix_to_meters = '{0:.3g}'.format(((lane.carpos-lane.midpos)*3.7)/(right_fitx[500] - left_fitx[500]))
+            
+    
 
 
 
-#### 6. Drawing Lanes.
+### 6. Drawing Lanes.
 
-The draw_lanes() function is responsable to draw the lane in the orginal image.
+The draw_lanes() function is responsible to draw the lane in the original image.
 
 
     def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, show = False, l_rad=0, r_rad=0):
@@ -203,10 +216,84 @@ The draw_lanes() function is responsable to draw the lane in the orginal image.
     return result
     
 
+### 7. Lane Detection and Challenge Pipeline.
+
+All the core code to detect the lanes , call the right function to find the lanes, as well the counter of iterations and use o averages to output "X" values to the draw_lanes() functions were coded inside the function.
+As can be see below, when the instance of the class Line left.detected or right.detected are false, the code calls the function to find blindly the lanes (find_lanes()). Was determined that an error greater the 2% in the last 45 measures the code consider the lane not detected (left or right.detected=False) , for the opposite situation the lane is considered detected (left or right.detected=True).
+
+The global counter "i" for iterations is used to prevent memory overflow, stopping and reseting all the "appended" values.
+
+
+    def advanced_lane_lines(image):
+    
+    ### Global counter to calculate the number of iterations and prevent memory overflow
+    global i 
+    i=i+1
+     
+    undistorced,result = color_gradient(image)
+    result, Minv  = bird_view(result)
+
+    ### For the first time, always call find_lanes() function
+    if (left.detected == False or right.detected == False):
+        left_fit, right_fit = find_lanes(result, show = False)
+                        
+        left.current_fit.append(left_fit) ### Calculate de averages for best Fit
+        right.current_fit.append(right_fit)
+        left.best_fit=np.average(left.current_fit[-45:], axis=0)
+        right.best_fit=np.average(right.current_fit[-45:], axis=0)
+        
+        left.diffs.append(left.current_fit[-1] - left_fit) ### Differences between last Fits
+        right.diffs.append(right.current_fit[-1] - right_fit)
+        
+        
+      
+    left_fit,right_fit,left_fitx, right_fitx, ploty= find_next_lane(result, left.best_fit, right.best_fit, show = False)
+    
+    y_value.ally.append(ploty)
+    left.current_fit.append(left_fit) ### Calculate de averages for best Fit
+    right.current_fit.append(right_fit)
+    left.best_fit=np.average(left.current_fit[-45:], axis=0)
+    right.best_fit=np.average(right.current_fit[-45:], axis=0) 
+    left.diffs.append(left.current_fit[-1] - left_fit) ### Differences between last Fits
+    right.diffs.append(right.current_fit[-1] - right_fit)        
+    
+           
+    left.recent_xfitted.append(left_fitx)
+    right.recent_xfitted.append(right_fitx)
+    left.bestx=np.average(left.recent_xfitted[-45:], axis=0)
+    right.bestx=np.average(right.recent_xfitted[-45:], axis=0)
     
     
+    # Here the code calculate the accuracy of the lane detection and decides what funtion to call to find the lanes
+    if (np.mean(left.recent_xfitted) < 0.98*np.mean(left.bestx)) or (np.mean(left.recent_xfitted) > 1.02*np.mean(left.bestx)) :
+        left.detected = False
+    else:
+        left.detected = True
+        
+    if (np.mean(right.recent_xfitted) < 0.98*np.mean(right.bestx)) or (np.mean(right.recent_xfitted) > 1.02*np.mean(right.bestx)) :
+        right.detected = False
+    else: 
+        right.detected = True
+        
     
-![alt text][image10]
+    if i > 350: ### To prevent memory Overflow 
+        left.detected = False
+        right.detected = False 
+        left.recent_xfitted =[]
+        right.recent_xfitted=[]
+        left.current_fit = []
+        right.current_fit = []
+        left.best_fit = None
+        right.best_fit = None
+        left.diffs = []
+        right.diffs = []
+        
+        i = 0 
+        
+    return undistorced,result, Minv
+    
+    
+
     
  
 ### Pipeline (video)
@@ -221,6 +308,9 @@ The draw_lanes() function is responsable to draw the lane in the orginal image.
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+This project was very challenger but in the same way very pleasure. See our skills improving, as well being tested are a very good manner to know our strengths and weakness. Unfortunately I could not test the harder challenge entire video in my computer due memory limitations, but one aspect of the challenge for me became very clear. 
+In some way, is not hard to treat different problems with different codes , the problem is to create a robust and generic code who performs reasonable in all situations, for example, for a winding road maybe a second degree polynomial is not enough , maybe have to use 3th or 4th, and makes the code to adapt to different situations , using as base the knowledge I have now, is a tricky job.
+Another concern I had is about the complexity of all operation and how to make the code runs live in realtime situation. To process the entire code takes much more time than the video has, so I tend to think Python is not the best solution for embedded solutions, maybe I wrong, but is a question I still have.
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further 
+
+
