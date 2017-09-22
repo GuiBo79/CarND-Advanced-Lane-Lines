@@ -24,9 +24,11 @@ class Line():
         #y values for detected line pixels
         self.ally = []
         #Center position of the Lane
-        self.midpos=0
+        self.midpos = 0
         #Position of the car
-        self.carpos=0
+        self.carpos = 0
         #Pixels to meters value
-        self.pix_to_meters=None
+        self.pix_to_meters = None
+        #Lane Width 
+        self.width = 0
 
