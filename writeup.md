@@ -41,6 +41,7 @@ The goals of this project are the following:
 [image12]: ./examples/reviewed_histogram.png "Histogram"
 [video1]: ./Project_ADVLANES.mp4 "Project Video"
 [video2]: ./Project-CHALLENGE.mp4 "Challenge Video"
+[video3]: ./Project-Review.mp4 "Reviewed Video"
 
 
 ### Development Environment
@@ -58,6 +59,7 @@ The goals of this project are the following:
 5. Project_ADVLANES.mp4 (Project Video)
 6. Project-CHALLENGE.mp4 (Challenge Video)
 7. calibration.p (Calibration parameters)
+8. Project_Review.mp4 (Video of REVIEWED code)
 
 ### 1. Camera Calibration and Image Undistortion 
 
