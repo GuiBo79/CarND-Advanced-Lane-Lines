@@ -8,6 +8,7 @@
 * Correction of bird_view() function to get more pixels and improve pikes detection in the histogram
 * "X" values passed as average of last iterations
 * Correction of relative center position calculation
+* Insertion of SANITY check 
 
 
 ### This writeup contain a description about how was found the solution for advanced lane lines detection as well an explanation about the code.
@@ -36,6 +37,8 @@ The goals of this project are the following:
 [image8]: ./examples/find_lanes.png "Histogram"
 [image9]: ./examples/find_next_lane.png "Histogram"
 [image10]: ./examples/draw_color_lanes.png "Histogram"
+[image11]: ./examples/reviewed_bird_view.png "Histogram"
+[image12]: ./examples/reviewed_histogram.png "Histogram"
 [video1]: ./Project_ADVLANES.mp4 "Project Video"
 [video2]: ./Project-CHALLENGE.mp4 "Challenge Video"
 
@@ -176,6 +179,13 @@ a.detect the pikes of the histogram of the binary output of the bird_view() func
 
 ![HISTOGRAM][image7]
 
+a*.REVIEWED - Is very clear the improvement reached changing the bird view points as well the RED Channel 
+
+![alt text][image11]
+
+
+![HISTOGRAM][image12]
+
 b.Fit the X and Y points to a second degree polynomial. 
 
 ![alt text][image8]
@@ -183,45 +193,37 @@ b.Fit the X and Y points to a second degree polynomial.
 
 
 
-### 5. Curvature radius calculation and center position
+### 5. Curvature radius calculation and center position (REVIEWED)
 
-In the second cell of the jupyter notebook is located the function lanes_curvature() , were the radius is calculated as follow
+In the second cell of the jupyter notebook is located the function lanes_curvature() , were the radius and center position are  calculated as follow
 
 
 
     def lanes_curvature (ploty, left_fit, right_fit):
     y_eval = np.max(ploty)
-    left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0]
-    right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0]  
-    return int(left_curverad), int(right_curverad)
+    left.radius_of_curvature = int((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
+    right.radius_of_curvature = int((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
+    lane.pix_to_meters =  '{0:.3g}'.format(((lane.carpos-lane.midpos)*3.7)/(right.allx[719] - left.allx[719]))
+    
+    return 
 
  
     
-In the challenge pipeline the radius as referred by the instance of the class Line left.radius_of_curvature and right.radius_of_curvature
 
 The values as printed inside the draw_lanes() function using the method cv2.putText()
 
-The code to calculate the position of the center of the lane was implemented inside find_lane() function as follow (challenge.ipynb)
-
-    # Position of the center of the lane
-    lane.midpos = (leftx_base + rightx_base)/2
-    
-To calculate the relative position of the car in respect to the middle of the lane , a piece of code was inserted inside the find_next_lane() function (challenge.ipynb) with 3 decimal aprox.
-
-    #Calculate de relative position of the car in respect to the center of the lane
-    lane.carpos = (left_fitx[500]+right_fitx[500])/2
-    lane.pix_to_meters = '{0:.3g}'.format(((lane.carpos-lane.midpos)*3.7)/(right_fitx[500] - left_fitx[500]))
-            
+ 
     
 
 
 
-### 6. Drawing Lanes.
+### 6. Drawing Lanes.(REVIEWED)
 
 The draw_lanes() function is responsible to draw the lane in the original image.
 
 
-    def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty,pix_meters, show = False, l_rad=0, r_rad=0):
+    def draw_lines(undist,warped, Minv, left_fitx, right_fitx, ploty, show = False):
+
     # Create an image to draw the lines on
     warp_zero = np.zeros_like(warped).astype(np.uint8)
     color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
@@ -239,9 +241,10 @@ The draw_lanes() function is responsible to draw the lane in the original image.
     # Combine the result with the original image
     result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
     #result = cv2.cvtColor(result, cv2.COLOR_BGR2RGB)
-    cv2.putText(result,"Left Rad: " + str(l_rad) + "m", (100,100), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
-    cv2.putText(result,"Right Rad: " + str(r_rad) + "m", (100,200), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
-    cv2.putText(result,"Center Error: " + str(pix_meters) + "m", (100,300), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
+    cv2.putText(result,"Left Rad: " + str(int(left.radius_of_curvature)) + "m", (100,100), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
+    cv2.putText(result,"Right Rad: " + str(int(right.radius_of_curvature)) + "m", (100,200), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
+    cv2.putText(result,"Center Error: " + str(lane.pix_to_meters) + "m", (100,300), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
+    cv2.putText(result,"Lane Detect: " + str(lane.detected) , (100,400), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 5)
     
     if show == True:
         plt.imshow(result)
@@ -249,81 +252,53 @@ The draw_lanes() function is responsible to draw the lane in the original image.
     return result
     
 
-### 7. Lane Detection and Challenge Pipeline.
+### 7. Lane Detection and SANITY Check.(REVIEWED)
 
-All the core code to detect the lanes , call the right function to find the lanes, as well the counter of iterations and use o averages to output "X" values to the draw_lanes() functions were coded inside the function.
-As can be see below, when the instance of the class Line left.detected or right.detected are false, the code calls the function to find blindly the lanes (find_lanes()). Was determined that an error greater the 2% in the last 45 measures the code consider the lane not detected (left or right.detected=False) , for the opposite situation the lane is considered detected (left or right.detected=True).
+All the core code to detect the lanes , call the right function to find the lanes, as well the counter of iterations and use of averages to output "X" values to the draw_lanes() functions were coded inside the function.
+As can be see below, when the instance of the class Line lane.detected are false, the code calls the function to find blindly the lanes (find_lanes()). Was determined that an error greater the 2% in the lane width will be considered as not detected , for the opposite situation the lane is considered detected .
+
+The SANITY check was implemented inside the functions find_lanes() and find_next_lane() as folow:
+
+    ##Sanity Check
+    if right.allx[719] - left.allx[719] < 0.98*lane.width or right.allx[719] - left.allx[719] > 1.02*lane.width:
+        lane.detected = False
+               
+    else:
+        lane.detected = True
 
 The global counter "i" for iterations is used to prevent memory overflow, stopping and reseting all the "appended" values.
 
 
     def advanced_lane_lines(image):
-    
-    ### Global counter to calculate the number of iterations and prevent memory overflow
-    global i 
+    global i
     i=i+1
-     
+    
+    
     undistorced,result = color_gradient(image)
-    result, Minv  = bird_view(result)
 
-    ### For the first time, always call find_lanes() function
-    if (left.detected == False or right.detected == False):
-        left_fit, right_fit = find_lanes(result, show = False)
-                        
-        left.current_fit.append(left_fit) ### Calculate de averages for best Fit
-        right.current_fit.append(right_fit)
-        left.best_fit=np.average(left.current_fit[-45:], axis=0)
-        right.best_fit=np.average(right.current_fit[-45:], axis=0)
-        
-        left.diffs.append(left.current_fit[-1] - left_fit) ### Differences between last Fits
-        right.diffs.append(right.current_fit[-1] - right_fit)
-        
-        
-      
-    left_fit,right_fit,left_fitx, right_fitx, ploty= find_next_lane(result, left.best_fit, right.best_fit, show = False)
+    result, Minv  = bird_view(result)
     
-    y_value.ally.append(ploty)
-    left.current_fit.append(left_fit) ### Calculate de averages for best Fit
-    right.current_fit.append(right_fit)
-    left.best_fit=np.average(left.current_fit[-45:], axis=0)
-    right.best_fit=np.average(right.current_fit[-45:], axis=0) 
-    left.diffs.append(left.current_fit[-1] - left_fit) ### Differences between last Fits
-    right.diffs.append(right.current_fit[-1] - right_fit)        
+    if lane.detected == False:
+        find_lanes(result, show = False)
     
-           
-    left.recent_xfitted.append(left_fitx)
-    right.recent_xfitted.append(right_fitx)
-    left.bestx=np.average(left.recent_xfitted[-45:], axis=0)
-    right.bestx=np.average(right.recent_xfitted[-45:], axis=0)
-    
-    
-    # Here the code calculate the accuracy of the lane detection and decides what funtion to call to find the lanes
-    if (np.mean(left.recent_xfitted) < 0.98*np.mean(left.bestx)) or (np.mean(left.recent_xfitted) > 1.02*np.mean(left.bestx)) :
-        left.detected = False
     else:
-        left.detected = True
+        find_next_lane(result, left.current_fit, right.current_fit, show = False)
         
-    if (np.mean(right.recent_xfitted) < 0.98*np.mean(right.bestx)) or (np.mean(right.recent_xfitted) > 1.02*np.mean(right.bestx)) :
-        right.detected = False
-    else: 
-        right.detected = True
-        
+    left.recent_xfitted.append(left.allx)
+    right.recent_xfitted.append(right.allx)
+    left.bestx = np.average(left.recent_xfitted[-40:],axis=0)
+    right.bestx = np.average(right.recent_xfitted[-40:],axis=0)
+
+    lanes_curvature (lane.ally, left.current_fit, right.current_fit)
+    result = draw_lines(undistorced,result, Minv, left.bestx , right.bestx , lane.ally,show=True)
     
-    if i > 350: ### To prevent memory Overflow 
-        left.detected = False
-        right.detected = False 
-        left.recent_xfitted =[]
-        right.recent_xfitted=[]
-        left.current_fit = []
-        right.current_fit = []
-        left.best_fit = None
-        right.best_fit = None
-        left.diffs = []
-        right.diffs = []
-        
-        i = 0 
-        
-    return undistorced,result, Minv
+    if i > 100:
+        left.recent_xfitted = []
+        right.recent_xfitted = []
+        i=0
+          
+    
+    return result
     
     
 
@@ -334,6 +309,8 @@ The global counter "i" for iterations is used to prevent memory overflow, stoppi
 #### 1. Project Video
 
 [Link to project video](./Project_ADVLANES.mp4)
+[Link to REVIEWED video](./Project_Review.mp4)
+
 
 #### 2. Challenge Video
 
@@ -344,6 +321,8 @@ The global counter "i" for iterations is used to prevent memory overflow, stoppi
 This project was very challenger but in the same way very pleasure. See our skills improving, as well being tested are a very good manner to know our strengths and weakness. Unfortunately I could not test the harder challenge entire video in my computer due memory limitations, but one aspect of the challenge for me became very clear. 
 In some way, is not hard to treat different problems with different codes , the problem is to create a robust and generic code who performs reasonable in all situations, for example, for a winding road maybe a second degree polynomial is not enough , maybe have to use 3th or 4th, and makes the code to adapt to different situations , using as base the knowledge I have now, is a tricky job.
 Another concern I had is about the complexity of all operation and how to make the code runs live in realtime situation. To process the entire code takes much more time than the video has, so I tend to think Python is not the best solution for embedded solutions, maybe I wrong, but is a question I still have.
+
+About the Review: To further my skills to have this project done the review was indispensable. My code became shorter and pretty much faster, doing the job in a better way. I tried to do my best to implement all the modifications requested , and for sure, even far way from perfection, my project now is better, thank you very much.
 
 
 
